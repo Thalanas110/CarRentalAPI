@@ -251,14 +251,21 @@ class Validator {
     
     /**
      * Sanitize a string value
+     * @param mixed $value
+     * @return string|array
      */
-    public static function sanitize($value): string {
+    public static function sanitize($value) {
         if (is_array($value)) {
             return array_map([self::class, 'sanitize'], $value);
         }
         
+        // Handle null values
+        if ($value === null) {
+            return '';
+        }
+        
         // Remove any null bytes
-        $value = str_replace(chr(0), '', $value);
+        $value = str_replace(chr(0), '', (string)$value);
         
         // Trim whitespace
         $value = trim($value);
